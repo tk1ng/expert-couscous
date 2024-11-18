@@ -19,11 +19,11 @@ Bancontact Deferred Sales is a combined service that allows the card acceptor to
 
 | Timer Values                       | MCC Code                                                                                                                                                        | Duration       |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| MCC = 5542                         | Automated Fuel Dispensers                                                                                                                                       | Max 15 minutes |
-| MCC = 5552                         | Electric Car Charging Stations                                                                                                                                  | Max 8 hours    |
-| MCC = 4011, 4111, 4112, 4131, 4784 | Mass Transit related (Railroads, Local and suburban commuter passenger transportation, including ferries, Passenger railways, Bus lines, Tolls and bridge fees) | Max 24 hours   |
-| MCC = 7523                         | Parking Lots and Garages                                                                                                                                        | Max 7 days     |
-| MCC = 5411, 5432, 5499             | Groceries and Supermarkets, Click and Collect services, Miscellaneous Food Shops-Convenience Shops and Specialty retail outlets                                 | Max 8 days     |
+| MCC \= 5542                         | Automated Fuel Dispensers                                                                                                                                       | Max 15 minutes |
+| MCC \= 5552                         | Electric Car Charging Stations                                                                                                                                  | Max 8 hours    |
+| MCC \= 4011, 4111, 4112, 4131, 4784 | Mass Transit related (Railroads, Local and suburban commuter passenger transportation, including ferries, Passenger railways, Bus lines, Tolls and bridge fees) | Max 24 hours   |
+| MCC \= 7523                         | Parking Lots and Garages                                                                                                                                        | Max 7 days     |
+| MCC \= 5411, 5432, 5499             | Groceries and Supermarkets, Click and Collect services, Miscellaneous Food Shops-Convenience Shops and Specialty retail outlets                                 | Max 8 days     |
 | All other MCCs, except 6011        | Other categories                                                                                                                                                | Max 24 hours   |
 
 <br />
@@ -76,12 +76,12 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 5411, 5432 or 5499 then must be \> 0.00 EUR and \<= 325.00 EUR  
-        Else If MCC = 5542 then must be \> 0.00 EUR and \<=375.00 EUR
-        Else If MCC = 5552 then must be \> 0.00 EUR and \<=60.00 EUR
-        Else If MCC = 7523 then must be \> 0.00 EUR and \<=170.00 EUR
-        Else If MCC = 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and <= 30.00 EUR
-        Else must be > 0.00 EUR and <= 100.00 EUR
+        If MCC \= 5411, 5432 or 5499 then must be \> 0.00 EUR and \<\= 325.00 EUR  
+        Else If MCC \= 5542 then must be \> 0.00 EUR and \<\=375.00 EUR
+        Else If MCC \= 5552 then must be \> 0.00 EUR and \<\=60.00 EUR
+        Else If MCC \= 7523 then must be \> 0.00 EUR and \<\=170.00 EUR
+        Else If MCC \= 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<\= 30.00 EUR
+        Else must be > 0.00 EUR and \<\= 100.00 EUR
       </td>
     </tr>
 
@@ -99,8 +99,8 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<= 30.00 EUR  
-        Else must be \> 0.00 EUR and <= 50.00 EUR
+        If MCC \= 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<\= 30.00 EUR  
+        Else must be \> 0.00 EUR and \<\= 50.00 EUR
       </td>
     </tr>
 
@@ -136,8 +136,8 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<= 30.00 EUR  
-        Else must be \> 0.00 EUR and <= 50.00 EUR
+        If MCC \= 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<\= 30.00 EUR  
+        Else must be \> 0.00 EUR and \<\= 50.00 EUR
       </td>
     </tr>
 
@@ -155,12 +155,12 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 5411, 5432 or 5499 then must be \> 0.00 EUR and\<= 325.00 EUR  
-        Else If MCC = 5542 then must be \> 0.00 EUR and \<=375.00 EUR
-        Else If MCC = 5552 then must be \> 0.00 EUR and \<=60.00 EUR
-        Else If MCC = 7523 then must be \> 0.00 EUR and \<=170.00 EUR
-        Else If MCC = 4011, 4111, 4112, 4131 or 4784 be \> 0.00 EUR and \<= 30.00 EUR
-        Else must be > 0.00 EUR and <= 100.00 EUR
+        If MCC \= 5411, 5432 or 5499 then must be \> 0.00 EUR and\<\= 325.00 EUR  
+        Else If MCC \= 5542 then must be \> 0.00 EUR and \<\=375.00 EUR
+        Else If MCC \= 5552 then must be \> 0.00 EUR and \<\=60.00 EUR
+        Else If MCC \= 7523 then must be \> 0.00 EUR and \<\=170.00 EUR
+        Else If MCC \= 4011, 4111, 4112, 4131 or 4784 be \> 0.00 EUR and \<\= 30.00 EUR
+        Else must be > 0.00 EUR and \<\= 100.00 EUR
       </td>
     </tr>
 
@@ -214,12 +214,12 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 5411, 5432 or 5499 then must be \> 0.00 EUR and\<= 325.00 EUR  
-        Else If MCC = 5552 then must be \> 0.00 EUR and \<=60.00 EUR
-        Else If MCC = 5542 then must be \> 0.00 EUR and \<=375.00 EUR
-        Else If MCC = 7523 then must be \> 0.00 EUR and \<=170.00 EUR
-        Else If MCC = 4011, 4111, 4112, 4131 or 4784 be \> 0.00 EUR and <= 30.00 EUR
-        Else must be > 0.00 EUR and <= 100.00 EUR
+        If MCC \= 5411, 5432 or 5499 then must be \> 0.00 EUR and\<\= 325.00 EUR  
+        Else If MCC \= 5552 then must be \> 0.00 EUR and \<\=60.00 EUR
+        Else If MCC \= 5542 then must be \> 0.00 EUR and \<\=375.00 EUR
+        Else If MCC \= 7523 then must be \> 0.00 EUR and \<\=170.00 EUR
+        Else If MCC \= 4011, 4111, 4112, 4131 or 4784 be \> 0.00 EUR and \<\= 30.00 EUR
+        Else must be \> 0.00 EUR and \<\= 100.00 EUR
       </td>
     </tr>
 
