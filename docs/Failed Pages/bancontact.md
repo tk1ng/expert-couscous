@@ -76,11 +76,11 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 5411, 5432 or 5499 then must be > 0.00 EUR and <= 325.00 EUR  
-        Else If MCC = 5542 then must be > 0.00 EUR and <=375.00 EUR
-        Else If MCC = 5552 then must be > 0.00 EUR and <=60.00 EUR
-        Else If MCC = 7523 then must be > 0.00 EUR and <=170.00 EUR
-        Else If MCC = 4011, 4111, 4112, 4131 or 4784 then must be > 0.00 EUR and <= 30.00 EUR
+        If MCC = 5411, 5432 or 5499 then must be \> 0.00 EUR and \<= 325.00 EUR  
+        Else If MCC = 5542 then must be \> 0.00 EUR and \<=375.00 EUR
+        Else If MCC = 5552 then must be \> 0.00 EUR and \<=60.00 EUR
+        Else If MCC = 7523 then must be \> 0.00 EUR and \<=170.00 EUR
+        Else If MCC = 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and <= 30.00 EUR
         Else must be > 0.00 EUR and <= 100.00 EUR
       </td>
     </tr>
@@ -99,8 +99,8 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 4011, 4111, 4112, 4131 or 4784 then must be > 0.00 EUR and <= 30.00 EUR  
-        Else must be > 0.00 EUR and <= 50.00 EUR
+        If MCC = 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<= 30.00 EUR  
+        Else must be \> 0.00 EUR and <= 50.00 EUR
       </td>
     </tr>
 
@@ -136,8 +136,8 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 4011, 4111, 4112, 4131 or 4784 then must be >0.00 EUR and <= 30.00 EUR  
-        Else must be > 0.00 EUR and <= 50.00 EUR
+        If MCC = 4011, 4111, 4112, 4131 or 4784 then must be \> 0.00 EUR and \<= 30.00 EUR  
+        Else must be \> 0.00 EUR and <= 50.00 EUR
       </td>
     </tr>
 
@@ -155,11 +155,11 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 5411, 5432 or 5499 then must be > 0.00 EUR and<= 325.00 EUR  
-        Else If MCC = 5542 then must be > 0.00 EUR and <=375.00 EUR
-        Else If MCC = 5552 then must be > 0.00 EUR and <=60.00 EUR
-        Else If MCC = 7523 then must be > 0.00 EUR and <=170.00 EUR
-        Else If MCC = 4011, 4111, 4112, 4131 or 4784 be > 0.00 EUR and <= 30.00 EUR
+        If MCC = 5411, 5432 or 5499 then must be \> 0.00 EUR and\<= 325.00 EUR  
+        Else If MCC = 5542 then must be \> 0.00 EUR and \<=375.00 EUR
+        Else If MCC = 5552 then must be \> 0.00 EUR and \<=60.00 EUR
+        Else If MCC = 7523 then must be \> 0.00 EUR and \<=170.00 EUR
+        Else If MCC = 4011, 4111, 4112, 4131 or 4784 be \> 0.00 EUR and \<= 30.00 EUR
         Else must be > 0.00 EUR and <= 100.00 EUR
       </td>
     </tr>
@@ -214,11 +214,11 @@ The minimum transaction amount is 0.02 EUR.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        If MCC = 5411, 5432 or 5499 then must be > 0.00 EUR and<= 325.00 EUR  
-        Else If MCC = 5552 then must be > 0.00 EUR and <=60.00 EUR
-        Else If MCC = 5542 then must be > 0.00 EUR and <=375.00 EUR
-        Else If MCC = 7523 then must be > 0.00 EUR and <=170.00 EUR
-        Else If MCC = 4011, 4111, 4112, 4131 or 4784 be > 0.00 EUR and <= 30.00 EUR
+        If MCC = 5411, 5432 or 5499 then must be \> 0.00 EUR and\<= 325.00 EUR  
+        Else If MCC = 5552 then must be \> 0.00 EUR and \<=60.00 EUR
+        Else If MCC = 5542 then must be \> 0.00 EUR and \<=375.00 EUR
+        Else If MCC = 7523 then must be \> 0.00 EUR and \<=170.00 EUR
+        Else If MCC = 4011, 4111, 4112, 4131 or 4784 be \> 0.00 EUR and <= 30.00 EUR
         Else must be > 0.00 EUR and <= 100.00 EUR
       </td>
     </tr>
