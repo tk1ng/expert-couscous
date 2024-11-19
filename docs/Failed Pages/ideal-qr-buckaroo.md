@@ -52,7 +52,7 @@ An iDEAL QR is pre-registered at the QR bank. The bank will generate a QR with a
 ## Create iDEAL QR via Wizard:
 
 1. Go to [plaza.buckaroo.nl](https://plaza.buckaroo.nl)
-2. Services > iDEAL QR > Actions > Generate new QR
+2. Services \> iDEAL QR > Actions > Generate new QR
 3. Select Website
 4. Fill in amount
 5. Description (max 35 characters)
@@ -67,7 +67,7 @@ An iDEAL QR is pre-registered at the QR bank. The bank will generate a QR with a
 
 You can generate the iDEAL QR-codes via a batch file. As soon as the file is ready, it can be uploaded in the Plaza under: 
 
-* Services > File upload > Actions. 
+* Services > File upload \> Actions. 
 * Select the file and tick the “Upload the batch file as test” box if a test is desired. 
 * In case the website key isn’t processed in the file, it can be selected here as well.
 
@@ -81,7 +81,7 @@ Link naar QR Batch Sample
 
 | Column              | Description                                                                                                                                                                                                                                                                                                                                                      |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WebsiteKey          | Go to My Buckaroo > Websites > (Select website under Filters). The website can also be specified during the uploading. In that case, it doesn’t have to be processed in the file.                                                                                                                                                                                |
+| WebsiteKey          | Go to My Buckaroo \> Websites \> (Select website under Filters). The website can also be specified during the uploading. In that case, it doesn’t have to be processed in the file.                                                                                                                                                                                |
 | Amount              | The amount initially shown to the donor.                                                                                                                                                                                                                                                                                                                         |
 | AmountisChangeable  | “TRUE” means that the donor can adjust the amount. “FALSE” means that the amount is fixed.                                                                                                                                                                                                                                                                       |
 | MinAmount/MaxAmount | The minimum and maximum amount between which the donor can choose while making a payment. The minimum amount is €0,00 and the maximum amount is €50,000.00. The payer’s bank might sometimes allow a lower maximum amount due to security reasons. In the hospitality industry, the maximum amount allows the customer to give a tip during the payment process. |
@@ -96,4 +96,4 @@ Link naar QR Batch Sample
 
 ### Link to iDEAL payment to use for mobile / QR hyperlink:
 
-The link to the actual QR code will look something like this: `https://qr7.ideal.nl/ideal-qr/qr/get/72d374b7-f878-4b78-ac05-xxxxxxxx`. This can be found in the processing results. <br><br>When you scan the QR code you will end up with a link that looks something like this: `https://qr7.ideal.nl/72d374b7-f878-4b78-ac05-xxxxxxxx`. (The part, ideal-qr / qr / get / has been removed from the link.) <br><br>To ensure that consumers can initiate a payment from their mobile, it is recommended to add the above link. This can be done, for example, by linking a hyperlink to the QR code or by placing a special button for this.
+The link to the actual QR code will look something like this: `https://qr7.ideal.nl/ideal-qr/qr/get/72d374b7-f878-4b78-ac05-xxxxxxxx`. This can be found in the processing results. <br/><br/>When you scan the QR code you will end up with a link that looks something like this: `https://qr7.ideal.nl/72d374b7-f878-4b78-ac05-xxxxxxxx`. (The part, ideal-qr / qr / get / has been removed from the link.) <br/><br/>To ensure that consumers can initiate a payment from their mobile, it is recommended to add the above link. This can be done, for example, by linking a hyperlink to the QR code or by placing a special button for this.
