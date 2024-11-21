@@ -5,213 +5,83 @@ hidden: false
 metadata:
   robots: index
 ---
-With Belvo's Open Finance Payment Initiation (OFPI), you can collect payments from your customers and optimize their payment experience. In this guide, we’ll show you:
+With our App2App flow, you can offer your clients a more native app experience using Belvo’s Hosted Widget, enhancing their user experience and reducing friction. On this page, we’ll guide you through the new flow and provide guidelines on how to implement it.
 
-* the general flow of data
-* how to create a payment intent to collect payments
-* track the status of your payment requests
+# User flow
 
-<HTMLBlock>{`<div style="border-left: 4px solid #FFEB3B; background-color: #fff8e1; padding: 10px; margin: 10px 0; border-radius: 5px;">
-  <strong>Prerequisites:</strong> Please make sure you have completed all the steps in our dedicated <a href="https://developers.belvo.com/docs/ofpi-prerequisites" target="_blank">prerequisites</a> article before continuing this guide.
-</div>`}</HTMLBlock>
+With the App2App flow, the key difference for the user is that after they grant their consent to share data:
 
-# Data flow overview
+1. They are redirected to a secure browser to complete the request.
+2. They are redirected directly to your app.
+3. The Belvo widget opens in a webview within your app.
 
-As you can see in the diagram below, the data flow for creating a payment using Pix via Open Finance involves:
+> 📘 How does this differ from the usual flow?
+>
+> In the usual flow, when you implement the Hosted Widget using deep links, the user completes the entire connection process in the browser and is then prompted to be redirected to your application, which leads to friction and a suboptimal user experience. With this new flow, the user is seamlessly transferred through the different redirections.
 
-1. Creating a payment intent (containing the required information for the payment to be processed in the Open Finance Network).
-2. Listening for the `OBJECT_CREATED` webhook from the transactions resource.
-3. Getting the transaction details.
-
-![](https://files.readme.io/4502548fd198d8fa320f7a588141bef543ac8e1b3de9c397a12cc49abcdd830d-CleanShot_2024-09-10_at_16.43.292x.png)
+<Embed url="https://www.youtube.com/watch?v=qJrJSKNNlrA" title="App2App Flow Example" favicon="https://www.google.com/favicon.ico" image="https://i.ytimg.com/vi/qJrJSKNNlrA/hqdefault.jpg" provider="youtube.com" href="https://www.youtube.com/watch?v=qJrJSKNNlrA" typeOfEmbed="youtube" html="%3Ciframe%20class%3D%22embedly-embed%22%20src%3D%22%2F%2Fcdn.embedly.com%2Fwidgets%2Fmedia.html%3Fsrc%3Dhttps%253A%252F%252Fwww.youtube.com%252Fembed%252FqJrJSKNNlrA%253Ffeature%253Doembed%26display_name%3DYouTube%26url%3Dhttps%253A%252F%252Fwww.youtube.com%252Fwatch%253Fv%253DqJrJSKNNlrA%26image%3Dhttps%253A%252F%252Fi.ytimg.com%252Fvi%252FqJrJSKNNlrA%252Fhqdefault.jpg%26key%3D7788cb384c9f4d5dbbdbeffd9fe4b92f%26type%3Dtext%252Fhtml%26schema%3Dyoutube%22%20width%3D%22854%22%20height%3D%22480%22%20scrolling%3D%22no%22%20title%3D%22YouTube%20embed%22%20frameborder%3D%220%22%20allow%3D%22autoplay%3B%20fullscreen%3B%20encrypted-media%3B%20picture-in-picture%3B%22%20allowfullscreen%3D%22true%22%3E%3C%2Fiframe%3E" />
 
 <br />
 
-# Create a Payment Intent
+# Implementation
 
-The Payment Intent contains all the information necessary to register and process the payment in the Open Finance Network. To reduce friction for your customer, we recommend that you create your payment screen so that you can send all the information in just one POST call.
+To use the App2App flow, you will need to make the following changes to your current implementation:
 
-<Image align="center" src="https://files.readme.io/05ff611cd29be3028f68f4165ecd3558e35bcfec2fdca9b515ecf33cde8385d5-Pix_Automatico_-_One_Screen.png" />
+1. Create a link to your application.
+2. Use the link when generating the access token.
+3. Open the Webview Widget upon being redirected to your application.
 
-To create a Payment Intent, check out the recipe below which guides you through all the required parameters:
+## 1. Link to your application
 
-<TutorialTile backgroundColor="#018FF4" emoji="🦉" id="66ded1f5128b550019f811ea" link="https://developers.belvo.com/v1.0/recipes/create-a-payment-intent" slug="create-a-payment-intent" title="Create a Payment Intent" />
+Before setting up the native app experience, you need to prepare a universal link (iOS) or an app link (Android). This link is used to redirect your user back to your application after they have granted their consent in their institution.
 
-Once you successfully create a Payment Intent, you will need to use the URL in the `payment_method_information.open_finance.redirect_url` parameter to redirect your user to their financial institution to confirm the payment. After confirming the payment, your user is redirected back to the `callback_url` you provided in the Payment Intent request.
+> 📘 Why not use a deep link?
+>
+> When using a deep link to your application, users receive a pop-up message that they need to confirm before being redirected to your app, which can lead to a poor user experience and friction.
+>
+> By using the `application_link`, users are automatically redirected to your application without needing to confirm the redirect.
 
-For details regarding the response from the Payment Intent request, please see our dedicated <a href="https://developers.belvo.com/docs/payment-intent-model-and-states-ofpi#payment-intent-model" target="_blank">Payment Intent (OFPI) Model and States</a> article.
+## 2. Generating your `access_token`
 
-# Payment Intents, Charges, and Transactions
+When generating your `access_token`, you need to provide the following parameters in the `callback_urls` object:
 
-For each payment, Belvo generates a **Charge** object within the Payment Intent response body. Once a Charge is processed successfully, Belvo generates a **Transaction** associated with that Charge.
+* `application_link` : The link to your application that users will be redirected to after granting consent in their institution.
+* `success`: The URL users are redirected to when they have successfully completed the widget flow.
+* `exit`:  The URL users are redirected to when they exit the widget before completing the flow.
+* `event`: The URL users are redirected to when an error occurs.
 
-<Image align="center" width="50% " src="https://files.readme.io/5e155442aa07614aefddb4b89138c5b4108db6e8cdaef501a075ef2814dbc3fe-image.png" />
-
-# Payment statuses and notifications
-
-Once you create an immediate payment, you will receive webhook updates for the associated Payment Intent, Charge, and Transaction.
-
-Below you can see an example of an immediate payment and the associated statuses the payment will go through. You will receive `STATUS_UPDATE` webhook notifications for each status that is marked with a red dot (🔴).
-
-![](https://files.readme.io/f48a52d1d7a15d5413a3480fade1edf177c995d3024f7955e7c91865516574fe-image.png)
-
-When you receive the `OBJECT_CREATED` Transaction webhook event, this indicates that the given scheduled payment was settled.
-
-# Listen for payment status updates
-
-Once you create the Payment Intent, Belvo will provide you updates regarding the payment via webhooks. As you can see in the image in the [Data flow overview](https://developers.belvo.com/docs/direct-api-pix-via-open-finance#data-flow-overview) section, you will receive the following webhooks during the payment process:
-
-<Table align={["left","left","left"]}>
-  <thead>
-    <tr>
-      <th style={{ textAlign: "left" }}>
-        Event
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Resource
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Description
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        `STATUS_UPDATE`
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Payment Intents
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        The `STATUS_UPDATE` events for Payment Intents indicate the stage of the Pix via Open Finance payment process. You will receive the following status updates: `REQUIRES_ACTION`, `PROCESSING`, and `SUCCEEDED`.  
-
-        > **Note**: Apart from responding to the event with a `200 OK`, no further action is required.
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        `STATUS_UPDATE`
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Charges
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        The `STATUS_UPDATE` events for Charges indicates the stage of the Pix via Open Finance payment process. You will receive the following status updates:  `SUCCEEDED`.  
-
-        > **Note**: Apart from responding to the event with a `200 OK`, no further action is required.
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        `OBJECT_CREATED`
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        The `OBJECT_CREATED` event for Transactions indicates that the payment funds were transferred from one account to another.  
-
-        > **Note**: Apart from responding to the event with a `200 OK`, we recommend you also make a [Get Transaction Details](https://developers.belvo.com/docs/direct-api-pix-via-open-finance#get-details-for-successful-transactions) request to get the transaction information.
-      </td>
-    </tr>
-  </tbody>
-</Table>
-
-# Get details for successful transactions.
-
-The `OBJECT_CREATED` webhook from the Transactions resource that indicates that the **payment succeeded and funds were transferred** from one account to another. This means that every time money has been successfully transferred to your account, you’ll receive the following notification:
-
-```json OBJECT_CREATED transactions webhook payload
+```json callback_urls for App2App flow
 {
-  "webhook_id": "3b9a69f7-0f0a-455b-832d-49ad6fd4905c",
-  "webhook_type": "TRANSACTIONS",
-  "webhook_code": "OBJECT_CREATED",
-  "object_id": "d2e40773-19f6-48d1-93c3-3590ec0c74df",
-  "data": {}, //For OBJECT_CREATED webhooks, the data field returns an empty object.
+  ...
+  "callback_urls": {
+    "application_link": "https://your.company_name.br/belvo-widget",
+    "success": "https://your.company_name.br/success",
+    "exit": "https://your.company_name.br/exit",
+    "event": "https://your.company_name.br/error"
+  }
+  ...
 }
+
 ```
 
-You can get the details about the transaction by making a [GET details](https://developers.belvo.com/reference/detailpaymenttransactionsbrazil) call using the `object_id` of the transaction (which you receive in the webhook event).
+For complete instructions how how to generate the `access_token`, please see our dedicated <a href="https://developers.belvo.com/docs/hosted-widget-ofda#1-generating-an-access_token-ofda" target="_blank">Hosted Widget (OFDA) guide</a>.
 
-```curl Get Transaction Details request
-curl --request GET \
-     --url https://api.belvo.com/payments/br/transactions/{id}/ \
-     --header 'accept: application/json'
+## 3. Open Webview on redirect
+
+Once users grant consent in their institution, they are redirected to your application using the `application_link`, along with a query string that you’ll need to use to open the Belvo widget as a webview inside your application.
+
+```shell Redirect Example to application_link
+https://mobile.your-app-name.br/belvo-widget/ # Your application_link
+	?access_token={someAccessToken}&consent_id={someConsentId}&locale=pt... # Query string with details to open the Belvo widget
 ```
 
-<Table align={["left","left","left","left"]}>
-  <thead>
-    <tr>
-      <th style={{ textAlign: "left" }}>
-        Parameter
-      </th>
+As soon as users are redirected to your application, you need to open a webview within your application and launch Belvo’s widget:
 
-      <th style={{ textAlign: "left" }}>
-        Type
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Description
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Example
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        `id`
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        string\
-        (uuid)
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        The `transaction.id` that you want to get detailed information about. You can retrieve this ID from the `object_id` field that you received in the `OBJECT_CREATED` transactions webhook.
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        a3b92311-1888-449f-acaa-49ae28d68fcd
-      </td>
-    </tr>
-  </tbody>
-</Table>
-
-You will receive the following information regarding the transaction:
-
-```json Transactions response payload
-{
-  "id": "fd0f3303-cafb-47ea-9753-21155cb144ab",
-  "created_at": "2020-04-23T21:30:20.336854+00:00",
-  "created_by": "1c83ead8-6665-429c-a17a-ddc76cb3a95e",
-  "amount": "500",
-  "currency": "BRA",
-  "description": "Awesome training Sneaker",
-  "transaction_type": "INFLOW",
-  "beneficiary": "a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc",
-  "payer": {},
-  "payment_intent": "1c83ead8-6665-429c-a17a-ddc76cb3a95e",
-  "customer": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-}
+```shell Opening the widget in a webview example
+https://widget.belvo.io/ # The Belvo Hosted Widget URL
+	?access_token={someAccessToken}&consent_id={someConsentId}&locale=pt... # The query string you received
 ```
 
 <br />
 
-> 👍 And that's it! By following this guide you can make payments using Belvo's Pix via Open Finance product.
+✅ Done! With these few tweaks to your implementation, users will seamlessly move from your application to the widget, grant their consent, and then return to the widget within your application.
