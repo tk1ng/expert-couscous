@@ -33,22 +33,18 @@ Our Scheduled & Recurring Pix product builds upon the speed and security of Pix 
 
 Use Scheduled & Recurring Pix for those cases where you need to cyclically retrieve funds from your users for the **same amount**, such as automated loan collections, memberships, automated top-ups, payments with installments, and much more.
 
-<HTMLBlock>{`
 <div style={{ backgroundColor: "#e6f4ff", borderLeft: "5px solid #1a73e8", padding: "20px", borderRadius: "10px", fontFamily: "Arial, sans-serif", lineHeight: "1.6", margin: "20px 0" }}>
     <p><strong>Want to know more?</strong> Then check out our dedicated <a href="https://developers.belvo.com/docs/scheduled-and-recurring-pix" target="_blank">Scheduled and Recurring Pix</a> article. </p>
 </div>
-`}</HTMLBlock>
 
 # JSR (Journey Without Redirect)
 
-<HTMLBlock>{`
 <div style={{ borderLeft: "4px solid #9C27B0", backgroundColor: "#F3E5F5", padding: "10px", margin: "10px 0", borderRadius: "5px", display: "flex", alignItems: "center" }}>
   <span style={{ fontSize: "1.5em", marginRight: "10px" }}>✨</span>
   <div>
     <strong>Coming Soon:</strong> Exciting new features are on their way! Stay tuned for updates.
   </div>
 </div>
-`}</HTMLBlock>
 
 With our JSR product, your users can approve both one-time and recurring payments without ever needing to leave your application. Your users will experience a process that’s as smooth as butter.
 
