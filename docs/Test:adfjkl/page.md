@@ -19,9 +19,9 @@ Our Pix via Open Finance product allows you (merchants) to provide fast single-t
 
 Pix via Open Finance is perfect for **one-time payments**, such as: single top-ups, e-commerce purchases, betting payments, and on-demand collections.
 
-`<div style={{ backgroundColor: "#e6f4ff", borderLeft: "5px solid #1a73e8", padding: "20px", borderRadius: "10px", fontFamily: "Arial, sans-serif", lineHeight: "1.6", margin: "20px 0" }}>
+<div style={{ backgroundColor: "#e6f4ff", borderLeft: "5px solid #1a73e8", padding: "20px", borderRadius: "10px", fontFamily: "Arial, sans-serif", lineHeight: "1.6", margin: "20px 0" }}>
     <p><strong>Want to know more?</strong> Then check out our dedicated <a href="https://developers.belvo.com/docs/pix-via-open-finance" target="_blank">Pix via Open Finance</a> article. </p>
-</div>`
+</div>
 
 # Scheduled & Recurring Pix
 
