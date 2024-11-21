@@ -5,64 +5,94 @@ hidden: true
 metadata:
   robots: index
 ---
-> 👍 Subscribe to our institutions status page
+# Institutions
+
+![](https://files.readme.io/065cff3-small-Links_-_with_employment.png)
+
+An *institution* is an entity that Belvo can access information from. It can be a:
+
+* bank institution, such as Banamex retail banking or HSBC business banking.
+* fiscal institution, such as the Servicio de Administración Tributaria (SAT) in Mexico.
+* employment institution, such as Instituto Mexicano del Seguro Social (IMSS) in Mexico.
+
+> ✅ Belvo resources and institutions
 >
-> To be up to date regarding the status of any institution, make sure to subscribe to our <a href="https://institutions.belvo.com/" target="_blank">Institutions Status page</a> so you are automatically notified of any outages.
+> Not all institutions support the same Belvo resources. For example, the Accounts resource (used with banking institutions) won't be supported in fiscal institutions. To know which resources you can use for each institution, look at the `resources` array when you use one of the methods in the table below.
 
-On this page, we provide you with an overview of the coverage support of our Belvo products, per country and institution type. Please note:
+You can see a complete list of banking institutions by either consulting our Institutions page, or querying the following resources:
 
-* For *Historical data,* we provide the number of months that we can retrieve data for.
-* With institutions that require MFA (indicated by a *Yes* in the MFA column), then if you are using recurrent links you will need to provide an MFA token for each daily refresh. If you see an `*` in the MFA column, this means that the institution has an edge-case MFA flow. For more information, look for the institution in the [Institution MFA edge cases](https://developers.belvo.com/docs/institution#institution-mfa-edge-cases) table.
+| Endpoint                                                           | Method | Description                                         |
+| :----------------------------------------------------------------- | :----- | :-------------------------------------------------- |
+| [List](https://developers.belvo.com/reference/listinstitutions)    | `GET`  | List all institutions currently supported by Belvo. |
+| [Detail](https://developers.belvo.com/reference/detailinstitution) | `GET`  | Get the details for a specific institution.         |
 
-# Banking
+# Links
 
-> 📘
+Whenever a user connects to their institution using the Belvo API, we create a *Link*. A Link is a set of encrypted credentials, for example the username and password, that is associated with the user. You will always need to first register a Link before being able to access information specific to that end user. 
+
+You can perform the following operations with our Links resource:
+
+| Endpoint                                                        | Method   | Description                                                                                                          |
+| :-------------------------------------------------------------- | :------- | :------------------------------------------------------------------------------------------------------------------- |
+| [Register](https://developers.belvo.com/reference/registerlink) | `POST`   | Register a new link from a financial institution to your Belvo account.                                              |
+| [List](https://developers.belvo.com/reference/listlinks)        | `GET`    | List all links currently associated with your Belvo account.                                                         |
+| [Resume](https://developers.belvo.com/reference/patchlinks)     | `PATCH`  | Resume a link registering session that was paused because an MFA token was required by the institution.              |
+| [Detail](https://developers.belvo.com/reference/detaillink)     | `GET`    | Get the details of a specific link.                                                                                  |
+| [Update](https://developers.belvo.com/reference/updatelink)     | `PUT`    | Update the password of a specific link.                                                                              |
+| [Destroy](https://developers.belvo.com/reference/destroylink)   | `DELETE` | Delete permanently a link and all associated accounts, transactions, and owners information from your Belvo account. |
+
+> ✅ Use your own identifier 🤩
 >
-> In order to connect with bank institutions, your users **must** log in with their website credentials. Mobile application credentials are currently not supported.
+> We really recommend you make use of the `external_id` parameter when creating links as this will allow you to have your own unique identifier for a link in your own database. Check out our [Link creation best practices article](https://developers.belvo.com/docs/link-creation-best-practices#adding-your-own-identifier) for more information.
 
-> 🚧 Recurrent link support for business institutions
+## Recurrent links
+
+With recurrent links, Belvo automatically refreshes information weekly and notifies you via [webhook](https://developers.belvo.com/docs/webhooks) so you always have up-to-date data. Then, when you receive the webhook, you can use GET requests to the List or Detail endpoints to instantly access up-to-date information, without needing to connect to the institution.
+
+<Image title="Recurrent Link FLow.png" alt={1918} align="center" src="https://files.readme.io/eb96451-BANKING_DATA_-_Recurrent_Link_Asynchronous.png">
+  Recurrent link flow
+</Image>
+
+When you create a recurrent link, Belvo automatically retrieves key information about the Link ID. Once we have the information, we'll send you a historical webhook event indicating that you can make a GET request for that information. 
+
+We recommend you don't make POST calls immediately after a link is created. Instead, wait for a [historical update webhook](https://developers.belvo.com/docs/webhooks#webhook-events) which indicates that Belvo has scraped the data and then you can make a GET request to retrieve the information (the webhook is sent soon after a link is created). If you make a GET request before you receive a historical webhook, you will receive responses with empty data fields or duplicated information. 
+
+> 🛑 Use of user credentials
 >
-> Recurrent links are supported for any kind of institution. However, most business institutions require a fresh MFA token for each daily refresh. 
+> When using recurrent links, you must ensure that you comply with the data privacy regulation of the country you operate in. Additionally, we recommend that you inform users that their credentials will be used daily in order to cyclically retrieve up-to-date data.
+
+### Refresh rates
+
+By default, recurrent links are automatically **refreshed once every seven days**. However, you can change the update frequency of your recurrent links to every:
+
+* 6 hours (four times per day)
+* 12 hours (twice a day)
+* 24 hours (once a day)
+* 30 days (once a month)\
+  Note: with the 30-day refresh rate, we distribute the link updates between day 1 and day 20 of the given month. The refresh date for each monthly recurrent link is initially assigned randomly between the 1st and the 20th of the month. If the following link updates are successful then the subsequent refreshes for this link will occur on the same day each month. Links are not scheduled to be updated after the 20th of the month to reserve some time for potential re-tries. For more information, check out our [Help Center article](https://support.belvo.com/hc/en-us/articles/9438194912541) on Monthly recurrent links.
+
+{/*Recurrent links are scheduled to be refreshed within a time frame from the moment they are created.
+For example, if a recurrent link is created at 12:00 with a refresh rate of six hours, the system will schedule the first refresh between 12:00 and 18:00. If the system does the first refresh at 16:00, all following refreshes will be based on this time (so the next refresh will be at 22:00, then at 04:00, and then again at 10:00).\\\\\\\\\*/}
+
+> ✅ Refresh rate pricing
 >
-> Check out our [help center article](https://support.belvo.com/hc/en-us/articles/360015934457-Recurrent-links-and-business-institutions) to learn about some alternative strategies to optimize the experience.
+> To change your refresh rate or discuss refresh rate pricing, just email our sales team at <a href="mailto:sales@belvo.com">sales\@belvo.com</a>, and they'll get right to it.
 
-We currently support the following institutions, per country, for our Banking product.
+With recurrent links, we update the following information according to your chosen frequency:
 
-<br />
-
-## 🇧🇷 Brazil
-
-> 📘 <Glossary>OFDA</Glossary> institutions in BETA
->
-> Please note that some <Glossary>OFDA</Glossary> institutions are classified as being in BETA. This means that interactions with these institutions may result in:
->
-> * Failure to create consent.
-> * Incomplete data for all resources
-> * Data returned may be of reduced quality.
->
-> If you encounter any of these issues, please <a href="https://support.belvo.com/hc/en-us/requests/new" target="_blank">contact our support team</a>.
-
-<Table align={["left","left","left","left","left"]}>
+<Table align={["left","left","left"]}>
   <thead>
     <tr>
       <th style={{ textAlign: "left" }}>
-        Name
+        Institution
       </th>
 
       <th style={{ textAlign: "left" }}>
-        Available Resources
+        Initial information
       </th>
 
       <th style={{ textAlign: "left" }}>
-        In Beta
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Historical Data
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Supported Products
+        Refreshed information
       </th>
     </tr>
   </thead>
@@ -70,1085 +100,59 @@ We currently support the following institutions, per country, for our Banking pr
   <tbody>
     <tr>
       <td style={{ textAlign: "left" }}>
-        * \*Banco BMG\*\*<br/>`ofbmg_br_retail`<br/><a href="https://www.bancobmg.com.br/" target="_blank">Retail</a>
+        Banking
       </td>
 
       <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
+        All account, transaction, and owner information
       </td>
 
       <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
+        \- Account information, including current balance and credit data.<br/><br/>\- New transactions (added since the last recurrent link update).<br/><br/>\- Personal information of the link owner.
       </td>
     </tr>
 
     <tr>
       <td style={{ textAlign: "left" }}>
-        * \*Banco BMG\*\*<br/>`ofbmg_br_business`<br/><a href="https://www.bancobmg.com.br/" target="_blank">Business</a>
+        Fiscal
       </td>
 
       <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
+        All invoices, the tax compliance statuses, tax returns, and the tax status.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco BV\*\*<br/>`ofbvapp_br_retail`<br/><a href="https://www.bv.com.br/app-bv" target="_blank">Retail App</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco BV\*\*<br/>`ofbvweb_br_retail`<br/><a href="https://www.bv.com.br/" target="_blank">Retail Web</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco BV\*\*<br/>`ofbv_br_business`<br/><a href="https://www.bv.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco do Brasil\*\*<br/>`ofbancodobrasil_br_retail`<br/><a href="https://www.bb.com.br/site/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco do Brasil\*\*<br/>`ofbancodobrasil_br_business`<br/><a href="https://www.bb.com.br/site/pro-seu-negocio/#/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco do Nordeste\*\*<br/>`ofnordeste_br_retail`<br/><a href="https://www.bnb.gov.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco do Nordeste\*\*<br/>`ofnordeste_br_business`<br/><a href="https://www.bnb.gov.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banco Pan\*\*<br/>`ofbancopan_br_retail`<br/><a href="https://www.bancopan.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banrisul\*\*<br/>`ofbanrisul_br_retail`<br/><a href="https://www.banrisul.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Banrisul\*\*<br/>`ofbanrisul_br_business`<br/><a href="https://www.banrisul.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Bradesco\*\*<br/>`ofbradesco_br_retail`<br/><a href="https://banco.bradesco/html/classic/index.shtm" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Bradesco\*\*<br/>`ofbradesco_br_business`<br/><a href="https://banco.bradesco/html/pessoajuridica/index.shtm" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Bradesco Card\*\*<br/>`ofbradescard_br_retail`<br/><a href="https://www.bradescard.com.br/bradescard/html/index.html" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*BS2\*\*<br/>`ofbs2_br_business`<br/><a href="https://www.bancobs2.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*BTG\*\*<br/>`ofbtg_br_retail`<br/><a href="https://www.btgpactual.com/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*BTG\*\*<br/>`ofbtg_br_business`<br/><a href="https://www.btgpactual.com/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*BTG Empresas\*\*<br/>`ofbtgempresas_br_business`<br/><a href="https://app.empresas.btgpactual.com/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Caixa\*\*<br/>`ofcaixa_br_retail`<br/><a href="https://www.caixa.gov.br/Paginas/home-caixa.aspx" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Caixa\*\*<br/>`ofcaixa_br_business`<br/><a href="https://www.caixa.gov.br/Paginas/home-caixa.aspx" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Citi\*\*<br/>`ofciti_br_business`<br/><a href="https://corporateportal.brazil.citibank.com/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Citi\*\*<br/>`ofcitibank_br_business`<br/><a href="https://corporateportal.brazil.citibank.com/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Digio\*\*<br/>`ofdigio_br_retail`<br/><a href="https://www.digio.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Digio (Uber)\*\*<br/>`ofuberdigio_br_retail`<br/>Retail
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Itaú\*\*<br/>`ofitau_br_business`<br/><a href="https://www.itau.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Itáu\*\*<br/>`ofitau_br_retail`<br/><a href="https://www.itau.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Itaucard\*\*<br/>`ofitaucard_br_retail`<br/><a href="<https://www.itau.com.br/>" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Mercado Pago\*\*<br/>`ofmercadopago_br_retail`<br/><a href="https://www.mercadopago.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Mercado Pago\*\*<br/>`ofmercadopago_br_business`<br/><a href="https://www.mercadopago.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Next\*\*<br/>`ofnext_br_retail`<br/><a href="https://next.me/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Nubank\*\*<br/>`ofnubank_br_retail`<br/><a href="https://nubank.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Nubank\*\*<br/>`ofnubank_br_business`<br/><a href="https://nubank.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*PicPay\*\*<br/>`ofpicpay_br_retail`<br/><a href="https://picpay.com/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Safra\*\*<br/>`ofsafra_br_retail`<br/><a href="https://www.safra.com.br/index.htm" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Safra\*\*<br/>`ofsafra_br_business`<br/><a href="https://www.safra.com.br/pessoa-juridica.htm" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Safrapay\*\*<br/>`ofsafrapay_br_business`<br/><a href="https://www.safrapay.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Santander\*\*<br/>`ofsantander_br_retail`<br/><a href="https://www.santander.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Santander\*\*<br/>`ofsantander_br_business`<br/><a href="https://www.santander.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Santander Card\*\*<br/>`ofsantandercard_br_retail`<br/><a href="<https://www.santander.com.br/>" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Sicoob\*\*<br/>`ofsicoob_br_retail`<br/><a href="https://www.sicoob.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Sicoob\*\*<br/>`ofsicoob_br_business`<br/><a href="https://www.sicoob.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Sicredi\*\*<br/>`ofsicredi_br_retail`<br/><a href="https://www.sicredi.com.br/home/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Sicredi\*\*<br/>`ofsicredi_br_business`<br/><a href="https://www.sicredi.com.br/home/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Unicred\*\*<br/>`ofunicred_br_retail`<br/><a href="https://www.unicred.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*Unicred\*\*<br/>`ofunicred_br_business`<br/><a href="https://www.unicred.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*XP\*\*<br/>`ofxp_br_retail`<br/><a href="https://www.xpi.com.br/" target="_blank">Retail</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
-      </td>
-    </tr>
-
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        * \*XP\*\*<br/>`ofxp_br_business`<br/><a href="https://www.xpempresas.com.br/" target="_blank">Business</a>
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Accounts<br/>🟢 Incomes<br/>🟢 Owners<br/>🟢 Recurring Expenses<br/>🟢 Risk Insights<br/>🟢 Transactions
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        12
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Checking<br/>🟢 Credit Card<br/>🟢 Loans<br/>🟢 Savings
+        \- New invoices sent or received within the last five years.<br/><br/>\- New tax returns added within the last five years.
       </td>
     </tr>
   </tbody>
 </Table>
 
-# Employment
+## Single links
 
-We currently support the following institutions, per country, for our Employment product.
+Single links are used to perform ad hoc data access to accounts, owners,  transactions, and so on. For example, you can use it when you want to do an underwriting process to assess risk before lending money.
 
-## 🇧🇷 Brazil
+For single links, you need to pass the `fetch_resources` parameter when creating and then listen for webhooks once the historical data has been asynchronously extracted. 
 
-<Table align={["left","left","left","left"]}>
+<Image align="center" src="https://files.readme.io/2558317-BANKING_DATA_-_Single_Link_Asynchronous_1.png" />
+
+# Link statuses
+
+A link can have different statuses, which reflect if the link is operational or if an action is needed to restore the link.
+
+<Table align={["left","left","left"]}>
   <thead>
     <tr>
       <th style={{ textAlign: "left" }}>
-        Name
+        Status
       </th>
 
       <th style={{ textAlign: "left" }}>
-        Available resources
+        Description
       </th>
 
       <th style={{ textAlign: "left" }}>
-        MFA
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Products supported
+        Action
       </th>
     </tr>
   </thead>
@@ -1156,161 +160,106 @@ We currently support the following institutions, per country, for our Employment
   <tbody>
     <tr>
       <td style={{ textAlign: "left" }}>
-        **INSS**
-        `inss_br_employment`
+        `valid`
       </td>
 
       <td style={{ textAlign: "left" }}>
-        🟢 Owners\
-        🟢 Employment Brazil
+        A `valid` link is a fully working link.
       </td>
 
       <td style={{ textAlign: "left" }}>
-        No
+        None 🎉
+      </td>
+    </tr>
+
+    <tr>
+      <td style={{ textAlign: "left" }}>
+        `invalid`
       </td>
 
       <td style={{ textAlign: "left" }}>
-        🟢 Employments Brazil
+        An `invalid` link means that the credentials are no longer valid.
+      </td>
+
+      <td style={{ textAlign: "left" }}>
+        You need to ask your user to update their credentials in order for the link to be valid again.  
+
+        💡Use the Connect widget in update mode to ask your user to provide a new password.
+      </td>
+    </tr>
+
+    <tr>
+      <td style={{ textAlign: "left" }}>
+        `unconfirmed`
+      </td>
+
+      <td style={{ textAlign: "left" }}>
+        An `unconfirmed` link means that the link was never created successfully. A common situation where this can occur is when a user was prompted to for an MFA token but never provided it. 
+      </td>
+
+      <td style={{ textAlign: "left" }}>
+        You need to [resume](https://developers.belvo.com/reference/patchlinks) the link creation process with a token to complete the link creation.
+      </td>
+    </tr>
+
+    <tr>
+      <td style={{ textAlign: "left" }}>
+        `token_required`
+      </td>
+
+      <td style={{ textAlign: "left" }}>
+        A `token_required` link means that a previously `valid` link now requires a new token.
+      </td>
+
+      <td style={{ textAlign: "left" }}>
+        You need to [resume](https://developers.belvo.com/reference/patchlinks) the link update process with a token.  
+
+        💡Use the Connect widget in update mode to ask your user to provide a new password.
       </td>
     </tr>
   </tbody>
 </Table>
 
-<br />
+# Checking the status of a link
 
-## 🇲🇽 Mexico
+You can find the status of a link by making one of the following queries and checking the value of the status field in the JSON response:
 
-<Table align={["left","left","left","left"]}>
-  <thead>
-    <tr>
-      <th style={{ textAlign: "left" }}>
-        Name
-      </th>
+## List all current links
 
-      <th style={{ textAlign: "left" }}>
-        Available resources
-      </th>
+Use the [List all links method](https://developers.belvo.com/reference/listlinks) to get all the links you currently have access to. You can perform filtering on the responses to return just the links that have a certain status. In the example below, we filter the response to just have invalid links.
 
-      <th style={{ textAlign: "left" }}>
-        MFA
-      </th>
+```shell List (filtered)
+curl -- request POST 'https://sandbox.belvo.co/api/links/?status=invalid'\
+  -u [Secret Key ID]:[Secret Key PASSWORD]
+```
+```shell List (unfiltered)
+curl -- request POST 'https://sandbox.belvo.co/api/links/'\
+  -u [Secret Key ID]:[Secret Key PASSWORD]
+```
 
-      <th style={{ textAlign: "left" }}>
-        Products supported
-      </th>
-    </tr>
-  </thead>
+If you want to know about applying filters in your queries, see our [Filtering responses](https://developers.belvo.com/docs/searching-and-filtering) article.  
 
-  <tbody>
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        **IMSS**
-        `imss_mx_employment`
-      </td>
+## Get details for a specific link
 
-      <td style={{ textAlign: "left" }}>
-        🟢 Owners\
-        🟢 Employment Records\
-        🟢 Employment Metrics
-      </td>
+Use the [Get a link's details method](https://developers.belvo.com/reference/detaillink) to get the details for a specific Link. 
 
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
+```curl Link detail request
+curl -- request GET 'https://sandbox.belvo.co/api/links/{id}' \
+  -u [Secret Key ID]:[Secret Key PASSWORD]
+```
+```json Link detail response
+...
+{
+    “id”: “c70a25d4-d8ad-9999-b59e-b8f57f0e7123",
+    “institution”: “liverpool_mx_retail”,
+    “access_mode”: “recurrent”,
+    “last_accessed_at”: “2019-10-04T10:58:20.374432Z”,
+    “status”: “valid”, // Status of the link. In this case it's valid - perfect!
+    “created_by”: “b18626ab-74aa-45fd-a66d-babf1461f962"
+}
+...
+```
 
-      <td style={{ textAlign: "left" }}>
-        🟢 Employment Records
-      </td>
-    </tr>
+Where:
 
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        **ISSSTE**\
-        `issste_mx_employment`
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Owners\
-        🟢 Employment Records
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        No
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Employment Records
-      </td>
-    </tr>
-  </tbody>
-</Table>
-
-<br />
-
-> 📘
->
-> Please note that each CURP can only be accessed up to three times per day via IMSS.
-
-# Fiscal
-
-We currently support the following institutions, per country, for our Fiscal product.
-
-## 🇲🇽 Mexico
-
-<Table align={["left","left","left","left","left"]}>
-  <thead>
-    <tr>
-      <th style={{ textAlign: "left" }}>
-        Name
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Available resources
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Historical data
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        MFA
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        Products supported
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        **SAT**
-        `sat_mx_fiscal`
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Invoices\*\*\
-        🟢 Tax compliance status\
-        🟢 Tax retentions\
-        🟢 Tax returns\
-        🟢 Tax status
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        60
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        Yes\*
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        🟢 Personal\
-        🟢 Business
-      </td>
-    </tr>
-  </tbody>
-</Table>
-
-\*\* Each **Invoices** call can extract up to 365 days of information.
+* `{id}` is the ID of the link. For example: `c70a25d4-d8ad-9999-b59e-b8f57f0e7123`.
