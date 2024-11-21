@@ -75,7 +75,7 @@ Une fois installé sur votre master, veuillez suivre la documentation ci-dessous
 
 ## 3. Préparation à la masterisation
 
-Windows OS
+Windows O
 
 Acronis Backup Cloud 7.8 ou 7.9
 
