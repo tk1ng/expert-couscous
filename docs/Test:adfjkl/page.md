@@ -19,9 +19,9 @@ Our Pix via Open Finance product allows you (merchants) to provide fast single-t
 
 Pix via Open Finance is perfect for **one-time payments**, such as: single top-ups, e-commerce purchases, betting payments, and on-demand collections.
 
-<div style={{ backgroundColor: "#e6f4ff", borderLeft: "5px solid #1a73e8", padding: "20px", borderRadius: "10px", fontFamily: "Arial, sans-serif", lineHeight: "1.6", margin: "20px 0" }}>
+<HTMLBlock>{`<div style="background-color: #e6f4ff; border-left: 5px solid #1a73e8; padding: 20px; border-radius: 10px; font-family: Arial, sans-serif; line-height: 1.6; margin: 20px 0;">
     <p><strong>Want to know more?</strong> Then check out our dedicated <a href="https://developers.belvo.com/docs/pix-via-open-finance" target="_blank">Pix via Open Finance</a> article. </p>
-</div>
+</div>`}</HTMLBlock>
 
 # Scheduled & Recurring Pix
 
@@ -35,20 +35,20 @@ Our Scheduled & Recurring Pix product builds upon the speed and security of Pix 
 
 Use Scheduled & Recurring Pix for those cases where you need to cyclically retrieve funds from your users for the **same amount**, such as automated loan collections, memberships, automated top-ups, payments with installments, and much more.
 
-`<div style={{ backgroundColor: "#e6f4ff", borderLeft: "5px solid #1a73e8", padding: "20px", borderRadius: "10px", fontFamily: "Arial, sans-serif", lineHeight: "1.6", margin: "20px 0" }}>
+<HTMLBlock>{`<div style="background-color: #e6f4ff; border-left: 5px solid #1a73e8; padding: 20px; border-radius: 10px; font-family: Arial, sans-serif; line-height: 1.6; margin: 20px 0;">
     <p><strong>Want to know more?</strong> Then check out our dedicated <a href="https://developers.belvo.com/docs/scheduled-and-recurring-pix" target="_blank">Scheduled and Recurring Pix</a> article. </p>
-</div>`
+</div>`}</HTMLBlock>
 
 # Pix Biometric Payments
 
 <Image align="center" src="https://files.readme.io/a61655e68936ed5cfdf3ca04f48ea5cf70934e7c5a86ab3c3d2a36bbd50d2648-image_1.png" />
 
-`<div style={{ borderLeft: "4px solid #9C27B0", backgroundColor: "#F3E5F5", padding: "10px", margin: "10px 0", borderradius: "5px", display: "flex", alignItems: "center">
-  <span style={{ fontSize: "1.5em", marginRight: "10px" }}>✨</span>
-  `<div>
+<HTMLBlock>{`<div style="border-left: 4px solid #9C27B0; background-color: #F3E5F5; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;">
+  <span style="font-size: 1.5em; margin-right: 10px;">✨</span>
+  <div>
     <strong>Coming Soon:</strong> Exciting new features are on their way! Stay tuned for updates.
-  </div>`
-</div>`
+  </div>
+</div>`}</HTMLBlock>
 
 With our no-redirect Pix journey, your users can approve payments without ever needing to leave your application. After a single authorization, they will be able make Pix payments using biometric authentication such as facial recognition or fingerprint. Your users will experience a process that’s as smooth as butter.
 
@@ -58,12 +58,12 @@ With our no-redirect Pix journey, your users can approve payments without ever n
 
 # Pix Automático (Automated Pix)
 
-<div style={{ borderLeft: "4px solid #9C27B0", backgroundColor: "#F3E5F5", padding: "10px", margin: "10px 0", borderRadius: "5px", display: "flex", alignItems: "center" }}>
+<HTMLBlock>{`<div style="border-left: 4px solid #9C27B0; background-color: #F3E5F5; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;">
   <span style="font-size: 1.5em; margin-right: 10px;">✨</span>
-  `<div>
+  <div>
     <strong>Coming Soon:</strong> Exciting new features are on their way! Stay tuned for updates.
-  </div>`
-</div>
+  </div>
+</div>`}</HTMLBlock>
 
 Pix Automático lets you create payment schedules for your users, with variable amounts (Variable Recurring Payments, VRP). Perfect for any recurring subscription where the amount changes, such as utilities, streaming, and more!
 
