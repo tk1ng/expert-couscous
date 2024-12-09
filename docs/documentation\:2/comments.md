@@ -11,6 +11,4 @@ metadata:
 
 {/* markdown comment */}
 
-[link](https://www.example.com)
-
 test
