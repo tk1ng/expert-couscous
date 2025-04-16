@@ -5,4 +5,4 @@ hidden: true
 metadata:
   robots: index
 ---
-[store](doc:store)
+[Pets](ref:pets)
