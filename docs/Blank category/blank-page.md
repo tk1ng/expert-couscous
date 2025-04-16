@@ -5,4 +5,4 @@ hidden: true
 metadata:
   robots: index
 ---
-[Pets](ref:addpet)
+[Pets](ref:addpets)
