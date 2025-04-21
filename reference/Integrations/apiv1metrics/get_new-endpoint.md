@@ -1,5 +1,5 @@
 ---
-title: New Endpoint
+title: Changed Name
 excerpt: This is your first endpoint! Edit this page to start documenting your API.
 api:
   file: test.json
