@@ -1,8 +1,0 @@
----
-title: Changed Name
-excerpt: This is your first endpoint! Edit this page to start documenting your API.
-api:
-  file: test.json
-  operationId: get_new-endpoint
-hidden: false
----
