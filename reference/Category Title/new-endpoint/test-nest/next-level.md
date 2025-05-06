@@ -1,5 +1,5 @@
 ---
-title: endpoint subpage (final level of nesting)
+title: endpoint subpage
 deprecated: false
 hidden: false
 metadata:
