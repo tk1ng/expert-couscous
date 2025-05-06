@@ -1,5 +1,5 @@
 ---
-title: test nest
+title: Second Endpoint
 deprecated: false
 hidden: false
 metadata:
