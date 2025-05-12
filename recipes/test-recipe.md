@@ -23,3 +23,4 @@ recipe:
 <!-- shell@ -->
 <!-- json@ -->
 
+[this recipe](https://superheros.readme.io/update/recipes/recipe-title#/)
