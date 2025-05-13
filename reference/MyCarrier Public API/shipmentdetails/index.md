@@ -1,4 +1,0 @@
----
-title: ShipmentDetails
-hidden: false
----
